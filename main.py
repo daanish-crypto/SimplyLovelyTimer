@@ -2,14 +2,14 @@ import time
 
 print("Welcome to the SimplyLovelyTimer, a pomodoro style timer for studying, with an f1 theme!")
 
-stime = int(input("Set how many minutes you would like to study in each cycle (Default=25)"))
-breaktime = int(input("Set how many minutes you would rest in each cycle (Default=25)"))
+stime = int(input("Set how many minutes you would like to study in each cycle (Default=25):"))
+breaktime = int(input("Set how many minutes you would rest in each cycle (Default=5):"))
 
 def timekeeper(mins, type):
     sec = mins * 60
 
     while sec != 0:
-        clockmin = sec / 60
+        clockmin = sec // 60
         clocksec = sec % 60
 
         timer = f"{clockmin:02d}:{clocksec:02d}"
