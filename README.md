@@ -4,6 +4,6 @@ It is supposed to be F1 themed lol, but ill do that when i make the GUI, rn its 
  
 # To Do
 - add progress bar to CLI
-- add a pause feature
+- ~~add a pause feature~~
 - make a GUI
 - add the formula 1 stuff

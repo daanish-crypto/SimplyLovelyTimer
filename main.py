@@ -1,4 +1,5 @@
 import time
+import msvcrt
 
 print("Welcome to the SimplyLovelyTimer, a pomodoro style timer for studying, with an f1 theme!")
 
@@ -7,16 +8,28 @@ breaktime = int(input("Set how many minutes you would rest in each cycle (Defaul
 
 def timekeeper(mins, type):
     sec = mins * 60
+    paused = False
 
     while sec != 0:
         clockmin = sec // 60
         clocksec = sec % 60
 
-        timer = f"{clockmin:02d}:{clocksec:02d}"
-        print(f"\r{type} time : {timer}", end="")
+        if msvcrt.kbhit():
+            keypress = msvcrt.getch().decode("utf-8").lower()
 
-        time.sleep(1)
-        sec = sec - 1
+            if keypress == "p":
+                paused = not paused #toggle switch for pause
+                if paused:
+                    print("\npaused")
+                if not paused:
+                    print("unpaused")
+
+        if not paused:
+            timer = f"{clockmin:02d}:{clocksec:02d}"
+            print(f"\r{type} time : {timer}", end="")
+
+            time.sleep(1)
+            sec = sec - 1
     
     print(f"\n{type} timer over!")
 
