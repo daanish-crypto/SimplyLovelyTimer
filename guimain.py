@@ -28,6 +28,7 @@ running = False
 session_type = "Study"
 timer_id = None
 car_x = 20
+button_frame_y = 110
 
 def timekeeper():
     global sec
@@ -71,12 +72,23 @@ def animate_car():
         app.after(16, animate_car)
     else:
         car_label.place_forget()
+        animate_buttons()
+        
 
+def animate_buttons():
+    global running
+    global button_frame_y
+    
+    if button_frame_y < 290:
+        button_frame_y = button_frame_y + 5
+        button_frame.place(relx=0.5,y=button_frame_y)
+        app.after(16, animate_buttons)
+    else:
         timer_label.pack(pady=(0, 20))
         title_label.configure(text="Focus Time", font=("Exo 2 Bold Italic", 32))
         running= True
         timekeeper()
-
+        
 def start_timer():
     global running
 
@@ -165,7 +177,11 @@ button_frame = ctk.CTkFrame(
     app,
     fg_color="transparent"
     )
-button_frame.pack(pady=10)
+button_frame.place(
+    relx=0.5,
+    anchor="n",
+    y=button_frame_y
+    )
 
 start_button = ctk.CTkButton(
     button_frame,
