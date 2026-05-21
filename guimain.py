@@ -1,19 +1,23 @@
 import customtkinter as ctk
 from PIL import Image
+import pygame
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
 
 app = ctk.CTk()
-app.configure(fg_color="#0D0D0D")
+app.configure(fg_color="#0C151E")
 
-app.geometry("550x410")
+app.geometry("747x420")
 app.title("SimplyLovelyTimer")
+
+pygame.mixer.init()
+engine_sound = pygame.mixer.Sound("engine.wav")
 
 car_image = ctk.CTkImage(
     light_image=Image.open("f1car.png"),
     dark_image=Image.open("f1car.png"),
-    size=(260,110)
+    size=(707,353)
 )
 
 study_time = 25 * 60
@@ -23,7 +27,7 @@ paused = False
 running = False
 session_type = "Study"
 timer_id = None
-car_x = 180
+car_x = 20
 
 def timekeeper():
     global sec
@@ -57,17 +61,34 @@ def timekeeper():
                 sec = study_time
             timekeeper()
 
+def animate_car():
+    global car_x
+    global running
+
+    if car_x < 700:
+        car_x = car_x + 7
+        car_label.place(x=car_x,y=120)
+        app.after(16, animate_car)
+    else:
+        car_label.place_forget()
+
+        timer_label.pack(pady=(0, 20))
+        title_label.configure(text="Focus Time", font=("Exo 2 Bold Italic", 32))
+        running= True
+        timekeeper()
 
 def start_timer():
     global running
 
     if not running:
-        running = True
+        
         start_button.pack_forget()
-        pause_button.pack(side="left",padx=10)
-        stop_button.pack(side="right", padx=10)
-        title_label.configure(text="Focus Time", font=("Exo 2 Bold Italic", 32))
-        timekeeper()
+
+        pause_button.pack(side="left",padx=10, pady=10)
+        stop_button.pack(side="right", padx=10,pady=10)
+
+        engine_sound.play()
+        app.after(700, animate_car)
 
 def pause_timer():
     global paused
@@ -139,7 +160,6 @@ timer_label = ctk.CTkLabel(
     text_color="#FFFFFF",
     font=("Exo 2 Black Italic", 116)
 )
-timer_label.pack(pady=(0, 20))
 
 button_frame = ctk.CTkFrame(
     app,
@@ -156,8 +176,8 @@ start_button = ctk.CTkButton(
     height=60,
     font=("Orbitron", 32, "bold"),
 
-    fg_color="#4D2FB2",
-    hover_color="#422998",
+    fg_color="#891212",
+    hover_color="#531B1B",
     corner_radius=15
 )
 start_button.pack(pady=10)
@@ -172,8 +192,8 @@ pause_button = ctk.CTkButton(
     font=("Iosevka Charon Mono", 30),
     text_color="#FFFFFF",
 
-    fg_color="#4D2FB2",
-    hover_color="#422998",
+    fg_color="#891212",
+    hover_color="#531B1B",
     corner_radius=15
 )
 
@@ -187,8 +207,8 @@ stop_button = ctk.CTkButton(
     font=("Iosevka Charon Mono", 30),
     text_color="#FFFFFF",
 
-    fg_color="#4D2FB2",
-    hover_color="#422998",
+    fg_color="#891212",
+    hover_color="#531B1B",
     corner_radius=15
 )
 
