@@ -2,15 +2,17 @@ import customtkinter as ctk
 from PIL import Image
 import pygame
 
+# theme and app window ----------------
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
 
 app = ctk.CTk()
 app.configure(fg_color="#0C151E")
-
-app.geometry("747x420")
+app.geometry("747x490")
 app.title("SimplyLovelyTimer")
+# -------------------------------------
 
+# assets -------------------------------
 pygame.mixer.init()
 engine_sound = pygame.mixer.Sound("engine.wav")
 
@@ -19,7 +21,9 @@ car_image = ctk.CTkImage(
     dark_image=Image.open("f1car.png"),
     size=(707,353)
 )
+# ---------------------------------------
 
+# variables -----------------------------
 study_time = 25 * 60
 break_time = 5 * 60
 sec = study_time
@@ -28,8 +32,11 @@ running = False
 session_type = "Study"
 timer_id = None
 car_x = 20
-button_frame_y = 110
+car_y = 190
+button_frame_y = 150
+# ---------------------------------------
 
+# clock ---------------------------------
 def timekeeper():
     global sec
     global session_type
@@ -45,9 +52,9 @@ def timekeeper():
         )
 
         if session_type == "Study":
-            title_label.configure(text="Focus Time", font=("Exo 2 Bold Italic", 42))
+            title_label.configure(text="Focus Time")
         else:
-            title_label.configure(text="Break Time", font=("Exo 2 Bold Italic", 42))
+            title_label.configure(text="Break Time")
 
         if sec > 0:
             sec = sec - 1
@@ -61,14 +68,16 @@ def timekeeper():
                 session_type = "Study"
                 sec = study_time
             timekeeper()
+# ----------------------------------------
 
+#animation functions ---------------------
 def animate_car():
     global car_x
     global running
 
     if car_x < 700:
         car_x = car_x + 7
-        car_label.place(x=car_x,y=120)
+        car_label.place(x=car_x,y=car_y)
         app.after(16, animate_car)
     else:
         car_label.place_forget()
@@ -78,17 +87,25 @@ def animate_car():
 def animate_buttons():
     global running
     global button_frame_y
-    
-    if button_frame_y < 290:
+
+    if button_frame_y < 380:
         button_frame_y = button_frame_y + 5
         button_frame.place(relx=0.5,y=button_frame_y)
         app.after(16, animate_buttons)
     else:
-        timer_label.pack(pady=(0, 20))
-        title_label.configure(text="Focus Time", font=("Exo 2 Bold Italic", 32))
+        timer_label.place(
+            relx=0.5,
+            rely=0.2,
+            anchor="n"
+        )
+        title_label.tkraise()
+        title_label.configure(text="Focus Time", font=("SansSerifExbFLF", 100), text_color = "#CE2121")
+        title_label.pack_configure(pady=(30,20))
         running= True
         timekeeper()
-        
+# -----------------------------------------
+
+# button functions ------------------------
 def start_timer():
     global running
 
@@ -131,48 +148,35 @@ def skip_timer():
         session_type = "Study"
         sec = study_time
     timekeeper()
+# -------------------------------------
 
-header_frame = ctk.CTkFrame(
-    app,
-    fg_color="transparent"
-)
 
-header_frame.pack(pady=(45, 0))
-
+# header -------------------------------
 title_label = ctk.CTkLabel(
-    header_frame,
-    text="SimplyLovelyTimer",
-    font=("Exo 2 Bold Italic", 36),
-    text_color="#ffffff"
-)
-title_label.pack(pady=(0))
-'''
-session_label = ctk.CTkLabel(
     app,
-    text="Focus Time",
-
-    text_color="#8B5CF6",
-
-    font=("Segoe UI", 15, "bold")
+    text="SimplyLovelyTimer",
+    font=("SansSerifBldFLF", 73),
+    text_color="#FFFFFF"
 )
-
-session_label.pack()
-'''
+title_label.pack(pady=(40,0))
 
 car_label = ctk.CTkLabel(
     app,
     image=car_image,
     text=""
 )
-car_label.place(x=car_x,y=120)
+car_label.place(x=car_x,y=car_y)
 
 timer_label = ctk.CTkLabel(
-    header_frame,
+    app,
     text="25:00",
-    text_color="#FFFFFF",
-    font=("Exo 2 Black Italic", 116)
+    text_color="#D4900D",
+    font=("Exo 2 Black Italic", 206)
 )
+# ------------------------------------
 
+
+# BUTTONS ------------------------------
 button_frame = ctk.CTkFrame(
     app,
     fg_color="transparent"
@@ -203,29 +207,30 @@ pause_button = ctk.CTkButton(
     text="⏸",
     command=pause_timer,
 
-    width=40,
+    width=100,
     height=60,
     font=("Iosevka Charon Mono", 30),
     text_color="#FFFFFF",
 
     fg_color="#891212",
     hover_color="#531B1B",
-    corner_radius=15
+    corner_radius=30
 )
 
 stop_button = ctk.CTkButton(
     button_frame,
-    text="⏹",
+    text="✖",
     command=skip_timer,
 
-    width=40,
+    width=60,
     height=60,
     font=("Iosevka Charon Mono", 30),
     text_color="#FFFFFF",
 
     fg_color="#891212",
     hover_color="#531B1B",
-    corner_radius=15
+    corner_radius=30
 )
+#-------------------------------------------
 
 app.mainloop()
