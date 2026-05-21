@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from PIL import Image
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
@@ -9,6 +10,12 @@ app.configure(fg_color="#0D0D0D")
 app.geometry("550x410")
 app.title("SimplyLovelyTimer")
 
+car_image = ctk.CTkImage(
+    light_image=Image.open("f1car.png"),
+    dark_image=Image.open("f1car.png"),
+    size=(260,110)
+)
+
 study_time = 25 * 60
 break_time = 5 * 60
 sec = study_time
@@ -16,6 +23,7 @@ paused = False
 running = False
 session_type = "Study"
 timer_id = None
+car_x = 180
 
 def timekeeper():
     global sec
@@ -117,6 +125,14 @@ session_label = ctk.CTkLabel(
 
 session_label.pack()
 '''
+
+car_label = ctk.CTkLabel(
+    app,
+    image=car_image,
+    text=""
+)
+car_label.place(x=car_x,y=120)
+
 timer_label = ctk.CTkLabel(
     header_frame,
     text="25:00",
