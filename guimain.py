@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import Menu
 from PIL import Image
 import pygame
+import os
 
 # theme and app window ----------------
 ctk.set_appearance_mode("dark")
@@ -155,8 +156,91 @@ def skip_timer():
     timekeeper()
 # -------------------------------------
 
+# music --------------------------------
+music_folder = "music"
+music_list = os.listdir(music_folder)
+
+current_song = 0
+music_paused = False
+music_started = False
+
+def load_song():
+    song_path = f"{music_folder}/{music_list[current_song]}"
+    pygame.mixer.music.load(song_path)
+    song_name = music_list[current_song].replace(".mp3", "")
+
+    music_title.configure(
+        text=song_name,
+        font=("SansSerifBldFLF", 24)
+    )
+
+def toggle_music():
+    global music_started
+    global music_paused
+
+    if not music_started:
+        load_song()
+        pygame.mixer.music.play()
+        music_started = True
+
+        music_play_button.configure(
+            text="⏸"
+        )
+    elif music_paused:
+        pygame.mixer.music.unpause()
+        music_paused = False
+
+        music_play_button.configure(
+            text="⏸"
+        )
+    else:
+        pygame.mixer.music.pause()
+        music_paused = True
+
+        music_play_button.configure(
+            text="▶"
+        )
+
+def next_song():
+    global current_song
+    global music_paused
+
+    current_song = current_song + 1
+
+    if current_song >= len(music_list):
+        current_song = 0
+
+    load_song()
+
+    pygame.mixer.music.play()
+    music_paused = False
+
+    music_play_button.configure(
+        text="⏸"
+    )
+
+def previous_song():
+    global current_song
+    global music_paused
+
+    current_song = current_song - 1
+
+    if current_song < 0:
+        current_song = len(music_list) - 1
+    
+    load_song()
+    pygame.mixer.music.play()
+    music_paused = False
+
+    music_play_button.configure(
+        text="⏸"
+    )
+# --------------------------------------
 # menus --------------------------------
 def open_music_menu():
+    global music_title
+    global music_play_button
+
     music_window = ctk.CTkToplevel(app)
     music_window.geometry("400x180")
     music_window.title("Music")
@@ -204,13 +288,15 @@ def open_music_menu():
         hover_color="#1A1A1A",
         border_width=1,
         border_color="#891212",
-        corner_radius=25
+        corner_radius=25,
+        command=previous_song
 
     )
     music_rewind_button.pack(padx=10, side="left")
+
     music_play_button = ctk.CTkButton(
         controls_frame,
-        text="⏸",
+        text="▶",
         width=50,
         height=50,
         font=("Iosevka Charon Mono", 28),
@@ -219,9 +305,11 @@ def open_music_menu():
         hover_color="#1A1A1A",
         border_width=1,
         border_color="#891212",
-        corner_radius=25
+        corner_radius=25,
+        command=toggle_music
     )
     music_play_button.pack(padx=10, side="left")
+
     music_skip_button = ctk.CTkButton(
         controls_frame,
         text="⏭",
@@ -233,7 +321,8 @@ def open_music_menu():
         hover_color="#1A1A1A",
         border_width=1,
         border_color="#891212",
-        corner_radius=25
+        corner_radius=25,
+        command=next_song
     )
     music_skip_button.pack(padx=10, side="left")
 
