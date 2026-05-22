@@ -1,8 +1,9 @@
 import customtkinter as ctk
-from tkinter import Menu
+from tkinter import Spinbox
 from PIL import Image
 import pygame
 import os
+import timer_config
 
 # theme and app window ----------------
 ctk.set_appearance_mode("dark")
@@ -12,9 +13,6 @@ app = ctk.CTk()
 app.configure(fg_color="#0C151E")
 app.geometry("850x460")
 app.title("SimplyLovelyTimer")
-
-menu_bar = Menu(app)
-app.config(menu=menu_bar)
 # -------------------------------------
 
 # assets -------------------------------
@@ -29,8 +27,8 @@ car_image = ctk.CTkImage(
 # ---------------------------------------
 
 # variables -----------------------------
-study_time = 25 * 60
-break_time = 5 * 60
+study_time = timer_config.study_time * 60
+break_time = timer_config.break_time * 60
 sec = study_time
 paused = False
 running = False
@@ -247,7 +245,6 @@ def open_music_menu():
     music_window.configure(
         fg_color = "#0C151E"
     )
-
     music_window.attributes("-topmost", True)
 
     music_title = ctk.CTkLabel(
@@ -327,6 +324,9 @@ def open_music_menu():
     music_skip_button.pack(padx=10, side="left")
 
 def open_settings_menu():
+    global study_spinbox
+    global break_spinbox
+
     settings_window = ctk.CTkToplevel(app)
     settings_window.geometry("400x300")
     settings_window.title("Settings")
@@ -339,8 +339,106 @@ def open_settings_menu():
         font=("SansSerifBldFLF", 40),
         text_color="#891212"
     )
-    settings_title.pack(pady=20)
+    settings_title.pack(pady=(20, 10))
+    settings_window.attributes("-topmost", True)
 
+    tabs = ctk.CTkTabview(
+        settings_window,
+        fg_color="#152432",
+        text_color="#0C151E",
+        segmented_button_fg_color="#152432",
+        segmented_button_unselected_color="#A36F10",
+        segmented_button_unselected_hover_color="#94650F",
+        segmented_button_selected_color="#891212",
+        segmented_button_selected_hover_color="#7E1212",
+    )
+    tabs._segmented_button.configure(
+        font=("SansSerifBldFLF", 20)
+    )
+    tabs.pack(
+        expand=True,
+        fill="both",
+        padx=20,
+        pady=(0, 20)
+    )
+    tabs.add("Timer")
+    tabs.add("Music") 
+    timer_tab = tabs.tab("Timer")
+    music_tab = tabs.tab("Music")
+
+    study_spinbox = Spinbox(
+        timer_tab,
+        from_=1,
+        to=120,
+        width=4,
+        font=("SansSerifBldFLF", 24),
+        bg="#151515",
+        fg="#D4900D",
+        buttonbackground='#0C151E',
+        command=update_config
+    )  
+    study_spinbox.delete(0, "end")
+    study_spinbox.insert(0, study_time//60)
+    study_spinbox.place(
+        relx = 0.3,
+        rely = 0.3,
+        anchor="center",
+        )
+
+    break_spinbox = Spinbox(
+        timer_tab,
+        from_=1,
+        to=24,
+        width=4,
+        font=("SansSerifBldFLF", 24),
+        bg="#151515",
+        fg="#D4900D",
+        buttonbackground='#0C151E',
+        command=update_config
+    )  
+    break_spinbox.delete(0, "end")
+    break_spinbox.insert(0, break_time//60)
+    break_spinbox.place(
+        relx = 0.7,
+        rely = 0.3,
+        anchor="center"
+    )
+
+    study_spinbox_label = ctk.CTkLabel(
+        timer_tab,
+        text="Study Time\nAmount",
+        text_color="#891212",
+        font=("SansSerifBldFLF", 24)
+    )
+    study_spinbox_label.place(
+        relx = 0.3,
+        rely = 0.7,
+        anchor="center"
+    )
+    break_spinbox_label = ctk.CTkLabel(
+        timer_tab,
+        text="Break Time\nAmount",
+        text_color="#891212",
+        font=("SansSerifBldFLF", 24)
+    )
+    break_spinbox_label.place(
+        relx = 0.7,
+        rely = 0.7,
+        anchor="center"
+    )
+
+def update_config():
+
+    study_value = int(study_spinbox.get())
+
+    break_value = int(break_spinbox.get())
+
+    with open("timer_config.py", "w") as file:
+
+        file.write(
+            f"study_time = {study_value}\n"
+            f"break_time = {break_value}"
+        )
 # header -------------------------------
 title_label = ctk.CTkLabel(
     app,

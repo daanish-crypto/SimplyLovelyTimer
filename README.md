@@ -7,7 +7,7 @@ It is supposed to be F1 themed lol, but ill do that when i make the GUI, rn its 
 - ~~make a GUI~~
 - ~~add the formula 1 stuff~~
 - ~~add settings and music buttons~~
-- make settings and music open menus
+- ~~make settings and music open menus~~
 - put timer settings in settings menu and link
-- add couple music files, option to import own music and selector in settings
+- ~~add couple music files~~, option to import own music and selector in settings
 - add options to select music in music menu button
