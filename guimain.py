@@ -14,33 +14,6 @@ app.title("SimplyLovelyTimer")
 
 menu_bar = Menu(app)
 app.config(menu=menu_bar)
-'''
-setting_menu = Menu(
-    menu_bar,
-
-    tearoff=0,
-
-    bg="#151515",
-    fg="white",
-
-    activebackground="#891212",
-    activeforeground="white"
-)
-
-menu_bar.add_cascade(
-    label="Settings",
-    menu=setting_menu
-)
-
-setting_menu.add_command(
-    label="Timers"
-)
-
-setting_menu.add_command(
-    label="Exit",
-    command=app.quit
-)
-'''
 # -------------------------------------
 
 # assets -------------------------------
@@ -182,8 +155,102 @@ def skip_timer():
     timekeeper()
 # -------------------------------------
 
-# menu --------------------------------
+# menus --------------------------------
+def open_music_menu():
+    music_window = ctk.CTkToplevel(app)
+    music_window.geometry("400x180")
+    music_window.title("Music")
+    music_window.configure(
+        fg_color = "#0C151E"
+    )
 
+    music_window.attributes("-topmost", True)
+
+    music_title = ctk.CTkLabel(
+        music_window,
+        text="Music",
+        font=("SansSerifBldFLF", 40),
+        text_color="#891212"
+    )
+    music_title.pack(pady=10)
+    music_bar = ctk.CTkProgressBar(
+        music_window,
+        orientation="horizontal",
+        corner_radius=15,
+        width=300,
+        height=10,
+        progress_color="#891212",
+        fg_color="#2A2A2A"
+    )
+    music_bar.pack(pady=10)
+    music_bar.set(0.4)
+
+    controls_frame = ctk.CTkFrame(
+        music_window,
+
+        fg_color="transparent"
+    )
+
+    controls_frame.pack(pady=10)
+
+    music_rewind_button = ctk.CTkButton(
+        controls_frame,
+        text="⏮",
+        width=50,
+        height=50,
+        font=("Iosevka Charon Mono", 28),
+        text_color="#891212",
+        fg_color="transparent",
+        hover_color="#1A1A1A",
+        border_width=1,
+        border_color="#891212",
+        corner_radius=25
+
+    )
+    music_rewind_button.pack(padx=10, side="left")
+    music_play_button = ctk.CTkButton(
+        controls_frame,
+        text="⏸",
+        width=50,
+        height=50,
+        font=("Iosevka Charon Mono", 28),
+        text_color="#891212",
+        fg_color="transparent",
+        hover_color="#1A1A1A",
+        border_width=1,
+        border_color="#891212",
+        corner_radius=25
+    )
+    music_play_button.pack(padx=10, side="left")
+    music_skip_button = ctk.CTkButton(
+        controls_frame,
+        text="⏭",
+        width=50,
+        height=50,
+        font=("Iosevka Charon Mono", 28),
+        text_color="#891212",
+        fg_color="transparent",
+        hover_color="#1A1A1A",
+        border_width=1,
+        border_color="#891212",
+        corner_radius=25
+    )
+    music_skip_button.pack(padx=10, side="left")
+
+def open_settings_menu():
+    settings_window = ctk.CTkToplevel(app)
+    settings_window.geometry("400x300")
+    settings_window.title("Settings")
+    settings_window.configure(
+        fg_color = "#0C151E"
+    )
+    settings_title = ctk.CTkLabel(
+        settings_window,
+        text="Settings",
+        font=("SansSerifBldFLF", 40),
+        text_color="#891212"
+    )
+    settings_title.pack(pady=20)
 
 # header -------------------------------
 title_label = ctk.CTkLabel(
@@ -279,7 +346,7 @@ stop_button = ctk.CTkButton(
 music_button = ctk.CTkButton(
     button_frame,
     text="Music",
-    command=skip_timer,
+    command=open_music_menu,
 
     font=("SansSerifBldFLF", 24),
     text_color="#891212",
@@ -299,7 +366,7 @@ music_button = ctk.CTkButton(
 settings_button = ctk.CTkButton(
     button_frame,
     text="Settings",
-    command=skip_timer,
+    command=open_settings_menu,
 
     font=("SansSerifBldFLF", 24),
     text_color="#891212",
