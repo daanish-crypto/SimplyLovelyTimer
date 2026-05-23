@@ -9,5 +9,5 @@ It is supposed to be F1 themed lol, but ill do that when i make the GUI, rn its 
 - ~~add settings and music buttons~~
 - ~~make settings and music open menus~~
 - ~~put timer settings in settings menu and link~~
-- ~~add couple music files~~, option to import own music and selector in settings
-- add options to select music in music menu button
+- ~~add couple music files~~, ~~option to import own music in settings~~
+- ~~add options to open music folder in music menu button~~

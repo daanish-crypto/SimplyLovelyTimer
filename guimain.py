@@ -18,11 +18,11 @@ app.title("SimplyLovelyTimer")
 
 # assets -------------------------------
 pygame.mixer.init()
-engine_sound = pygame.mixer.Sound("engine.wav")
+engine_sound = pygame.mixer.Sound("assets/engine.wav")
 
 car_image = ctk.CTkImage(
-    light_image=Image.open("f1car.png"),
-    dark_image=Image.open("f1car.png"),
+    light_image=Image.open("assets/f1car.png"),
+    dark_image=Image.open("assets/f1car.png"),
     size=(707,353)
 )
 # ---------------------------------------
@@ -483,7 +483,7 @@ def open_settings_menu():
     open_music_button = ctk.CTkButton(
         music_tab,
         text="🖿 Open Music",
-        command=upload_song,
+        command=open_music_folder,
         text_color="#891212",
         fg_color="transparent",
         #hover_color="#531B1B",
@@ -495,6 +495,10 @@ def open_settings_menu():
         border_width=2
     )
     open_music_button.pack(pady=(10,10))
+
+def open_music_folder():
+
+    os.startfile("music")
 
 def update_config():
     study_value = int(study_spinbox.get())
