@@ -509,8 +509,7 @@ def open_settings_menu():
     open_music_button.pack(pady=(10,10))
 
 def open_music_folder():
-
-    os.startfile("music")
+    os.startfile(resource_path("music"))
 
 def update_config():
     study_value = int(study_spinbox.get())
@@ -533,7 +532,7 @@ def upload_song():
     if file_path:
         song_name = os.path.basename(file_path)
         destination = os.path.join(
-            "music",
+            resource_path("music"),
             song_name
         )
         shutil.copy(file_path,destination)
