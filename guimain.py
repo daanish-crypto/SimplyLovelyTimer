@@ -168,19 +168,7 @@ def skip_timer():
 # -------------------------------------
 
 # music --------------------------------
-if getattr(sys, "frozen", False):
-
-    music_folder = os.path.join(
-        os.path.dirname(sys.executable),
-        "music"
-    )
-
-else:
-
-    music_folder = os.path.join(
-        os.path.abspath("."),
-        "music"
-    )
+music_folder = (resource_path("music"))
 music_list = os.listdir(music_folder)
 
 current_song = 0
