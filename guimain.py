@@ -1,11 +1,12 @@
 import customtkinter as ctk
-from tkinter import Spinbox, filedialog
+from tkinter import Spinbox, filedialog, font
 from PIL import Image
 import pygame
 import shutil
 import os
 import sys
 import json
+import ctypes
 
 # theme and app window ----------------
 ctk.set_appearance_mode("dark")
@@ -61,6 +62,15 @@ car_image = ctk.CTkImage(
     size=(707,353)
 )
 
+# DISC - the following 8 lines are AI, i cannot figure this out
+def load_font(font_path):
+    FR_PRIVATE = 0x10
+    FR_NOT_ENUM = 0x20
+    ctypes.windll.gdi32.AddFontResourceExW(font_path,FR_PRIVATE,0)
+load_font(resource_path("fonts/SansSerifBldFLF.otf"))
+load_font(resource_path("fonts/SansSerifExbFLF.otf"))
+load_font(resource_path("fonts/IosevkaCharonMono-Regular.ttf"))
+load_font(resource_path("fonts/Exo2-BlackItalic.ttf"))
 # ---------------------------------------
 
 # variables -----------------------------
@@ -613,7 +623,7 @@ start_button = ctk.CTkButton(
 
     width=140,
     height=60,
-    font=("Orbitron", 32, "bold"),
+    font=("SansSerifBldFLF", 42),
 
     fg_color="#891212",
     hover_color="#531B1B",
