@@ -1,13 +1,10 @@
-A Pomodoro-style timer, completely for free, open-source and customizable!
+# SimplyLovelyTimer
+A F1-themed Pomodoro-style timer, completely for free, open-source and customizable!
 
-It is supposed to be F1 themed lol, but ill do that when i make the GUI, rn its just a really basic CLI timer
- 
-# To Do
-- ~~add a pause feature~~
-- ~~make a GUI~~
-- ~~add the formula 1 stuff~~
-- ~~add settings and music buttons~~
-- ~~make settings and music open menus~~
-- ~~put timer settings in settings menu and link~~
-- ~~add couple music files~~, ~~option to import own music in settings~~
-- ~~add options to open music folder in music menu button~~
+## Features
+- Focus and break session timer
+- Customizable study and break durations
+- Built-in music player
+- Upload and manage custom music
+- Music playback controls (play, pause, skip, rewind)
+- Persistent saved settings
