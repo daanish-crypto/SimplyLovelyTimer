@@ -5,7 +5,7 @@ import pygame
 import shutil
 import os
 import sys
-import timer_config
+import json
 
 # theme and app window ----------------
 ctk.set_appearance_mode("dark")
@@ -28,6 +28,30 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+config_path = os.path.join(
+
+    os.path.dirname(sys.executable)
+    if getattr(sys, "frozen", False)
+    else os.path.abspath("."),
+
+    "timer_config.json"
+)
+if not os.path.exists(config_path):
+
+    default_config = {
+
+        "study_time": 25,
+        "break_time": 5
+    }
+
+    with open(config_path, "w") as file:
+
+        json.dump(default_config, file, indent=4)
+
+with open(config_path, "r") as file:
+
+    config = json.load(file)
+
 pygame.mixer.init()
 engine_sound = pygame.mixer.Sound(resource_path("assets/engine.wav"))
 
@@ -40,8 +64,8 @@ car_image = ctk.CTkImage(
 # ---------------------------------------
 
 # variables -----------------------------
-study_time = timer_config.study_time * 60
-break_time = timer_config.break_time * 60
+study_time = config["study_time"] * 60
+break_time = config["break_time"] * 60
 sec = study_time
 paused = False
 running = False
@@ -512,14 +536,21 @@ def open_music_folder():
     os.startfile(resource_path("music"))
 
 def update_config():
+    global study_time
+    global break_time
+
     study_value = int(study_spinbox.get())
     break_value = int(break_spinbox.get())
 
-    with open("timer_config.py", "w") as file:
-        file.write(
-            f"study_time = {study_value}\n"
-            f"break_time = {break_value}"
-        )
+    config["study_time"] = study_value
+    config["break_time"] = break_value
+
+    with open(config_path, "w") as file:
+
+        json.dump(config, file, indent=4)
+
+    study_time = study_value * 60
+    break_time = break_value * 60
 
 def upload_song():
     global music_list
