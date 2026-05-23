@@ -1,7 +1,8 @@
 import customtkinter as ctk
-from tkinter import Spinbox
+from tkinter import Spinbox, filedialog
 from PIL import Image
 import pygame
+import shutil
 import os
 import timer_config
 
@@ -163,9 +164,12 @@ music_paused = False
 music_started = False
 
 def load_song():
+    global song_length
     song_path = f"{music_folder}/{music_list[current_song]}"
     pygame.mixer.music.load(song_path)
     song_name = music_list[current_song].replace(".mp3", "")
+
+    song_length = pygame.mixer.Sound(song_path).get_length()
 
     music_title.configure(
         text=song_name,
@@ -176,6 +180,8 @@ def toggle_music():
     global music_started
     global music_paused
 
+    song_name = music_list[current_song].replace(".mp3", "")
+    
     if not music_started:
         load_song()
         pygame.mixer.music.play()
@@ -191,6 +197,10 @@ def toggle_music():
         music_play_button.configure(
             text="⏸"
         )
+        music_title.configure(
+        text=song_name,
+        font=("SansSerifBldFLF", 24)
+    )
     else:
         pygame.mixer.music.pause()
         music_paused = True
@@ -198,6 +208,10 @@ def toggle_music():
         music_play_button.configure(
             text="▶"
         )
+        music_title.configure(
+        text=song_name,
+        font=("SansSerifBldFLF", 24)
+    )
 
 def next_song():
     global current_song
@@ -237,7 +251,11 @@ def previous_song():
 # menus --------------------------------
 def open_music_menu():
     global music_title
+    global music_list
     global music_play_button
+    global music_bar
+
+    music_list = os.listdir(music_folder)
 
     music_window = ctk.CTkToplevel(app)
     music_window.geometry("400x180")
@@ -264,7 +282,6 @@ def open_music_menu():
         fg_color="#2A2A2A"
     )
     music_bar.pack(pady=10)
-    music_bar.set(0.4)
 
     controls_frame = ctk.CTkFrame(
         music_window,
@@ -322,6 +339,26 @@ def open_music_menu():
         command=next_song
     )
     music_skip_button.pack(padx=10, side="left")
+
+    update_music_bar()
+
+    def close_music_window():
+        pygame.mixer.music.pause()
+        music_window.destroy()
+    
+    music_window.protocol(
+        "WM_DELETE_WINDOW",
+        close_music_window
+    )
+
+def update_music_bar():
+    if pygame.mixer.music.get_busy():
+        current_pos = pygame.mixer.music.get_pos() / 1000
+
+        progress = current_pos  /song_length
+        music_bar.set(progress)
+
+    app.after(500, update_music_bar)
 
 def open_settings_menu():
     global study_spinbox
@@ -427,18 +464,66 @@ def open_settings_menu():
         anchor="center"
     )
 
+    upload_button = ctk.CTkButton(
+        music_tab,
+        text="⭱ Upload Song",
+        command=upload_song,
+        text_color="#891212",
+        fg_color="transparent",
+        #hover_color="#531B1B",
+        font=("SansSerifBldFLF", 28),
+        width=250,
+        height=50,
+        corner_radius=15,
+        border_color="#891212",
+        border_width=2
+    )
+    upload_button.pack(pady=(10,10))
+
+    open_music_button = ctk.CTkButton(
+        music_tab,
+        text="🖿 Open Music",
+        command=upload_song,
+        text_color="#891212",
+        fg_color="transparent",
+        #hover_color="#531B1B",
+        font=("SansSerifBldFLF", 28),
+        width=250,
+        height=50,
+        corner_radius=15,
+        border_color="#891212",
+        border_width=2
+    )
+    open_music_button.pack(pady=(10,10))
+
 def update_config():
-
     study_value = int(study_spinbox.get())
-
     break_value = int(break_spinbox.get())
 
     with open("timer_config.py", "w") as file:
-
         file.write(
             f"study_time = {study_value}\n"
             f"break_time = {break_value}"
         )
+
+def upload_song():
+    global music_list
+    file_path = filedialog.askopenfilename(
+        title="Select Song",
+        filetypes=[
+            ("Audio Files", "*.mp3 *.wav *.ogg")
+        ]
+    )
+    if file_path:
+        song_name = os.path.basename(file_path)
+        destination = os.path.join(
+            "music",
+            song_name
+        )
+        shutil.copy(file_path,destination)
+    
+    music_list = os.listdir(music_folder)
+    
 # header -------------------------------
 title_label = ctk.CTkLabel(
     app,

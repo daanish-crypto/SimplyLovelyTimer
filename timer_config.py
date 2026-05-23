@@ -1,2 +1,4 @@
-study_time = 25
-break_time = 5
+study_time = 50
+break_time = 10
+disabled_songs = [
+]
