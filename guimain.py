@@ -4,6 +4,7 @@ from PIL import Image
 import pygame
 import shutil
 import os
+import sys
 import timer_config
 
 # theme and app window ----------------
@@ -17,14 +18,25 @@ app.title("SimplyLovelyTimer")
 # -------------------------------------
 
 # assets -------------------------------
+def resource_path(relative_path):
+
+    try:
+        base_path = sys._MEIPASS
+
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 pygame.mixer.init()
-engine_sound = pygame.mixer.Sound("assets/engine.wav")
+engine_sound = pygame.mixer.Sound(resource_path("assets/engine.wav"))
 
 car_image = ctk.CTkImage(
-    light_image=Image.open("assets/f1car.png"),
-    dark_image=Image.open("assets/f1car.png"),
+    light_image=Image.open(resource_path("assets/f1car.png")),
+    dark_image=Image.open(resource_path("assets/f1car.png")),
     size=(707,353)
 )
+
 # ---------------------------------------
 
 # variables -----------------------------
@@ -156,7 +168,19 @@ def skip_timer():
 # -------------------------------------
 
 # music --------------------------------
-music_folder = "music"
+if getattr(sys, "frozen", False):
+
+    music_folder = os.path.join(
+        os.path.dirname(sys.executable),
+        "music"
+    )
+
+else:
+
+    music_folder = os.path.join(
+        os.path.abspath("."),
+        "music"
+    )
 music_list = os.listdir(music_folder)
 
 current_song = 0
