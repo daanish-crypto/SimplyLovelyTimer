@@ -20,7 +20,7 @@ app.title("SimplyLovelyTimer")
 
 # assets -------------------------------
 def resource_path(relative_path):
-
+    # used in bundling with  _internal folder that pyinstaller creates
     try:
         base_path = sys._MEIPASS
 
@@ -29,6 +29,7 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+# the config for timer settings
 config_path = os.path.join(
 
     os.path.dirname(sys.executable)
@@ -37,6 +38,7 @@ config_path = os.path.join(
 
     "timer_config.json"
 )
+#config creation
 if not os.path.exists(config_path):
 
     default_config = {
@@ -53,6 +55,7 @@ with open(config_path, "r") as file:
 
     config = json.load(file)
 
+# music mixer and engine animation sounds
 pygame.mixer.init()
 engine_sound = pygame.mixer.Sound(resource_path("assets/engine.wav"))
 
@@ -215,6 +218,7 @@ def load_song():
     pygame.mixer.music.load(song_path)
     song_name = music_list[current_song].replace(".mp3", "")
 
+    # song length for progress bar
     song_length = pygame.mixer.Sound(song_path).get_length()
 
     music_title.configure(
@@ -229,6 +233,7 @@ def toggle_music():
     song_name = music_list[current_song].replace(".mp3", "")
     
     if not music_started:
+        # init music if music has not played for first time
         load_song()
         pygame.mixer.music.play()
         music_started = True
@@ -237,6 +242,7 @@ def toggle_music():
             text="⏸"
         )
     elif music_paused:
+        # if paused, unpause and update button
         pygame.mixer.music.unpause()
         music_paused = False
 
@@ -248,6 +254,7 @@ def toggle_music():
         font=("SansSerifBldFLF", 24)
     )
     else:
+        # pauses if playing to retain position in song
         pygame.mixer.music.pause()
         music_paused = True
 
@@ -260,6 +267,7 @@ def toggle_music():
     )
 
 def next_song():
+    # skip song
     global current_song
     global music_paused
 
@@ -296,6 +304,7 @@ def previous_song():
 # --------------------------------------
 # menus --------------------------------
 def open_music_menu():
+    # music window
     global music_title
     global music_list
     global music_play_button
@@ -386,8 +395,10 @@ def open_music_menu():
     )
     music_skip_button.pack(padx=10, side="left")
 
+    # repeatedly updates progress bar to song progress
     update_music_bar()
 
+    # function to pause music when closing window (otherwise it just continues playing :sob)
     def close_music_window():
         pygame.mixer.music.pause()
         music_window.destroy()
@@ -425,6 +436,7 @@ def open_settings_menu():
     settings_title.pack(pady=(20, 10))
     settings_window.attributes("-topmost", True)
 
+    # seperate tabs for music settings and timer settings
     tabs = ctk.CTkTabview(
         settings_window,
         fg_color="#152432",
@@ -542,9 +554,11 @@ def open_settings_menu():
     )
     open_music_button.pack(pady=(10,10))
 
+#allows users to delete and reorder music (im sorry i was to lazy to create a disable thing in settings like i planned)
 def open_music_folder():
     os.startfile(resource_path("music"))
 
+# timer config updates everytime the spinbox changes (making it persistent)
 def update_config():
     global study_time
     global break_time
@@ -562,6 +576,7 @@ def update_config():
     study_time = study_value * 60
     break_time = break_value * 60
 
+# allows users to put their own songs rather than smooth operator lol (i still love that song tho)
 def upload_song():
     global music_list
     file_path = filedialog.askopenfilename(
